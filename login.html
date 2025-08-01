@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Jobs Portal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #7f53ac, #647dee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #647dee;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .login-btn:hover {
+      background-color: #4a57c9;
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .link a {
+      color: #647dee;
+      text-decoration: none;
+    }
+
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>Login</h2>
+    <div class="form-group">
+      <label for="email">Email ID</label>
+      <input type="email" id="email" required />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" required />
+    </div>
+
+    <button class="login-btn" id="loginBtn">Login</button>
+    <div class="error-message" id="errorMsg"></div>
+
+    <div class="link">
+      <a href="forgotpassword.html">Forgot Password?</a>
+    </div>
+    <div class="link">
+      Don't have an account? <a href="register.html">Register</a>
+    </div>
+  </div>
+
+<script type="module">
+    // Import Firebase modules from CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyASO9LK_qjYYzEmyqQ5_x-eAMlX5xSd5bQ",
+      authDomain: "jobs-portal-9d30d.firebaseapp.com",
+      projectId: "jobs-portal-9d30d",
+      storageBucket: "jobs-portal-9d30d.appspot.com", // ✅ Corrected
+      messagingSenderId: "128093936768",
+      appId: "1:128093936768:web:98d3fafc4085e6634e9a65",
+      measurementId: "G-L4H6R66B08"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+    // Login functionality
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.textContent = "";
+
+      if (!email || !password) {
+        errorMsg.textContent = "Please enter both email and password.";
+        return;
+      }
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        alert("Login successful!");
+        window.location.href = "joblistings.html";
+      } catch (error) {
+        console.error("Login error:", error.code, error.message);
+        if (error.code === "auth/user-not-found") {
+          errorMsg.textContent = "User not found.";
+        } else if (error.code === "auth/wrong-password") {
+          errorMsg.textContent = "Incorrect password.";
+        } else if (error.code === "auth/invalid-credential") {
+          errorMsg.textContent = "Invalid credentials.";
+        } else {
+          errorMsg.textContent = "Login failed: " + error.message;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+
+

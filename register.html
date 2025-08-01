@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - Jobs Portal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #7f53ac, #647dee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .register-container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #647dee;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .register-btn:hover {
+      background-color: #4a57c9;
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h2>Create Account</h2>
+    <div class="form-group">
+      <label for="email">Email ID</label>
+      <input type="email" id="email" required />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" required />
+    </div>
+
+    <button class="register-btn" id="registerBtn">Register</button>
+    <div class="error-message" id="errorMsg"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "jobs-portal-9d30d.firebaseapp.com",
+      projectId: "jobs-portal-9d30d",
+      storageBucket: "jobs-portal-9d30d.firebasestorage.app",
+      messagingSenderId: "128093936768",
+      appId: "1:128093936768:web:98d3fafc4085e6634e9a65",
+      measurementId: "G-L4H6R66B08"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+    // Register Function
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Registration successful! You can now login.");
+        window.location.href = "login.html"; // redirect to login
+      } catch (error) {
+        errorMsg.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>

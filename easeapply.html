@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Easy Apply</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #7f53ac, #647dee);
+      color: white;
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1em;
+    }
+    button {
+      background: white;
+      color: #647dee;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 25px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #e6e6e6;
+    }
+    .job-title {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Easy Apply Form</h2>
+  <div class="job-title" id="jobTitle"></div>
+
+  <form id="applyForm">
+    <label for="firstname">First Name</label>
+    <input type="text" id="firstname" required />
+
+    <label for="lastname">Last Name</label>
+    <input type="text" id="lastname" required />
+
+    <label for="gmail">Gmail Address</label>
+    <input type="email" id="gmail" placeholder="example@gmail.com" required />
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" placeholder="+91 9876543210" required pattern="[+0-9\s\-]{7,15}" />
+
+    <button type="submit">Submit Application</button>
+  </form>
+
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const jobTitle = getJobFromURL();
+    document.getElementById('jobTitle').textContent = jobTitle;
+
+    document.getElementById('applyForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const firstname = document.getElementById('firstname').value.trim();
+      const lastname = document.getElementById('lastname').value.trim();
+      const email = document.getElementById('gmail').value.trim().toLowerCase();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!firstname || !lastname || !email || !phone) {
+        alert("Please fill all the fields.");
+        return;
+      }
+
+      const fullName = `${firstname} ${lastname}`;
+      const submittedAt = new Date().toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      const application = {
+        job: jobTitle,
+        name: fullName,
+        email: email,
+        phone: phone,
+        submittedAt: submittedAt
+      };
+
+      let submitted = JSON.parse(localStorage.getItem('submittedApplications')) || [];
+      submitted.push(application);
+      localStorage.setItem('submittedApplications', JSON.stringify(submitted));
+
+      alert("Application submitted successfully! Redirecting...");
+      setTimeout(() => {
+        window.location.href = "success.html";
+      }, 1000);
+    });
+
+    function getJobFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('job') || 'Unknown Job';
+    }
+  });
+</script>
+
+</body>
+</html>
